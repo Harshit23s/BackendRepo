@@ -61,5 +61,7 @@ app.post("/", async (req, res) => {
 });
 
 // ✅ DO NOT USE app.listen() on Vercel
-module.exports = app;
+// module.exports = app;
+const serverless = require("serverless-http");
+module.exports.handler = serverless(app);
 
