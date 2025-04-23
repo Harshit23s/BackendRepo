@@ -44,8 +44,8 @@ async function connectToDatabase() {
   isConnected = true;
 }
 // test route
-app.get("/", (req, res) => {
-  res.send("Hello! from the get route")
+app.get("/test", (req, res) => {
+  res.status(200).json({ message: "Test route working!" });
 });
 // Route
 app.post("/", async (req, res) => {
