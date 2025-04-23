@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 // Schema
-const User = mongoose.model(
+const User = mongoose.model.user || mongoose.model(
   "User",
   new mongoose.Schema({
     name: String,
