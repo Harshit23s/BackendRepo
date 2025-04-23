@@ -1,11 +1,9 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   name: String,
   email: String,
+  // password: String,
 });
 
-module.exports = mongoose.model("User", userSchema);
-
-// // mongodb+srv://<db_username>:<db_password>@registrationapp.xwelvel.mongodb.net/?retryWrites=true&w=majority&appName=RegistrationApp
-
+export default mongoose.models.User || mongoose.model("User", UserSchema);
