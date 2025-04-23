@@ -74,5 +74,13 @@ app.post("/api", async (req, res) => {
 
 
 // ✅ Export for Vercel (this is important!)
+// const serverless = require("serverless-http");
+// module.exports = serverless(app); // Default export required by Vercel
+
 const serverless = require("serverless-http");
-module.exports = serverless(app); // Default export required by Vercel
+
+module.exports = async (req, res) => {
+  const handler = serverless(app);
+  return handler(req, res);
+};
+
