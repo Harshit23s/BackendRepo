@@ -22,24 +22,42 @@ const auth = new google.auth.GoogleAuth({
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI, {
+let isConnected; // Track the connection status
+
+mongoose.connection.on("connected", () => {
+  console.log("MongoDB connected");
+});
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
+});
+
+// Function to handle MongoDB connection
+async function connectToDatabase() {
+  if (isConnected) {
+    console.log("Using existing database connection");
+    return;
+  }
+
+  await mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  })
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("MongoDB error:", err));
+  });
+  isConnected = true;
+}
 
 // Route
 app.post("/", async (req, res) => {
   try {
     const { name, email } = req.body;
 
+    console.log(`Received request with name: ${name}, email: ${email}`);
+
+    await connectToDatabase(); // Ensure database is connected before proceeding
+
     const client = await auth.getClient();
     const sheets = google.sheets({ version: "v4", auth: client });
 
-    // Append to Google Sheet
+    console.log("Attempting to append to Google Sheets...");
     await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.SHEET_ID,
       range: "Sheet1!A:B",
@@ -48,20 +66,22 @@ app.post("/", async (req, res) => {
         values: [[name, email]],
       },
     });
+    console.log("Data successfully appended to Google Sheets.");
 
-    // Save to MongoDB
     const newUser = new User({ name, email });
     await newUser.save();
+    console.log("User successfully saved to MongoDB.");
 
     res.status(200).json({ message: "Saved successfully!" });
   } catch (err) {
-    console.error("Error:", err);
+    console.error("Error during execution:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
 // ✅ DO NOT USE app.listen() on Vercel
-// module.exports = app;
 const serverless = require("serverless-http");
 module.exports.handler = serverless(app);
 
+
+git remote add origin <https://github.com/Harshit23s/BackendRepo>
