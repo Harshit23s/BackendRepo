@@ -30,14 +30,31 @@ mongoose.connection.on("error", (err) =>
 );
 
 // DB Connect
-async function connectToDatabase() {
-  if (isConnected) return;
-  await mongoose.connect(process.env.MONGO_URI, {
+// async function connectToDatabase() {
+//   if (isConnected) return;
+//   await mongoose.connect(process.env.MONGO_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   });
+//   isConnected = true;
+// }
+let cachedDb = null;
+
+async function connectToDatabase(uri) {
+  if (cachedDb) {
+    return cachedDb;
+  }
+
+  const mongoose = require("mongoose");
+  await mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  isConnected = true;
+
+  cachedDb = mongoose.connection;
+  return cachedDb;
 }
+
 
 // 🧪 Test route
 app.get("/api/test", (req, res) => {
