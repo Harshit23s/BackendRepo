@@ -8,13 +8,12 @@ app.use(cors());
 app.use(express.json());
 
 // Schema
-const User = mongoose.model.user || mongoose.model(
-  "User",
-  new mongoose.Schema({
-    name: String,
-    email: String,
-  })
-);
+const UserSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+});
+
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
 // Google Sheets Auth
 const auth = new google.auth.GoogleAuth({
