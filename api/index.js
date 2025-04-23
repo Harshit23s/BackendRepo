@@ -45,29 +45,42 @@ app.get("/api/test", (req, res) => {
 });
 
 // 📥 Registration route
-app.post("/api", async (req, res) => {
+// app.post("/api", async (req, res) => {
+//   try {
+//     const { name, email } = req.body;
+//     console.log(`Received: name=${name}, email=${email}`);
+
+//     await connectToDatabase();
+
+//     const client = await auth.getClient();
+//     const sheets = google.sheets({ version: "v4", auth: client });
+
+//     await sheets.spreadsheets.values.append({
+//       spreadsheetId: process.env.SHEET_ID,
+//       range: "Sheet1!A:B",
+//       valueInputOption: "RAW",
+//       requestBody: { values: [[name, email]] },
+//     });
+
+//     const newUser = new User({ name, email });
+//     await newUser.save();
+
+//     res.status(200).json({ message: "Saved successfully!" });
+//   } catch (err) {
+//     console.error("Error:", err);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// });
+app.post("/", async (req, res) => {
   try {
     const { name, email } = req.body;
-    console.log(`Received: name=${name}, email=${email}`);
+    console.log(`Received request with name: ${name}, email: ${email}`);
 
-    await connectToDatabase();
+    // Temporarily skip Google Sheets and MongoDB
 
-    const client = await auth.getClient();
-    const sheets = google.sheets({ version: "v4", auth: client });
-
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: process.env.SHEET_ID,
-      range: "Sheet1!A:B",
-      valueInputOption: "RAW",
-      requestBody: { values: [[name, email]] },
-    });
-
-    const newUser = new User({ name, email });
-    await newUser.save();
-
-    res.status(200).json({ message: "Saved successfully!" });
+    res.status(200).json({ message: "Quick response working!" }); // ✅ Only this runs
   } catch (err) {
-    console.error("Error:", err);
+    console.error("Error during execution:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
