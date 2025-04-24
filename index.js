@@ -212,10 +212,27 @@ app.get("/test", (req, res) => {
 });
 
 // 📥 Registration route
+// app.post("/api", async (req, res) => {
+//   try {
+//     const { name, email } = req.body;
+//     console.log(`Received: name=${name}, email=${email}`);
+
+//     await connectToDatabase(process.env.MONGO_URI);
+//     await appendToSheet(name, email);
+//     await saveUser({ name, email });
+
+//     res.status(200).json({ message: "Saved successfully!" });
+//   } catch (err) {
+//     console.error("Error:", err);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// });
+
+// Your POST /api route
 app.post("/api", async (req, res) => {
   try {
     const { name, email } = req.body;
-    console.log(`Received: name=${name}, email=${email}`);
+    console.log("Received:", name, email);
 
     await connectToDatabase(process.env.MONGO_URI);
     await appendToSheet(name, email);
@@ -223,10 +240,11 @@ app.post("/api", async (req, res) => {
 
     res.status(200).json({ message: "Saved successfully!" });
   } catch (err) {
-    console.error("Error:", err);
+    console.error("🔥 ERROR in /api:", err); // <--- ADD THIS LINE
     res.status(500).json({ error: "Server error" });
   }
 });
+
 
 // Start server
 const PORT = process.env.PORT || 8000;
